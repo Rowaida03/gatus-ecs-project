@@ -1,0 +1,26 @@
+name: Terraform linting
+
+on:
+  workflow_dispatch:
+    inputs:
+      choice:
+        description: 'Type yes to apply the infrastructure'
+        required: true
+        type: string
+        default: ''
+
+permissions:
+  id-token: write
+  contents: read
+
+defaults:
+  run:
+  working-directory: ./infra
+
+env:
+AWS_REGION: eu-west-2
+TERRAFORM_VERSION: "1.6.0"
+
+jobs:
+  terraform_apply:
+  runs-on: ubuntu-latest
