@@ -1,0 +1,55 @@
+name: Docker build & push to ECR
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "push" to build and push the Docker image'
+        required: true
+        type: string
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: eu-west-2
+
+jobs:
+  docker_build_push:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'push'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to ECR
+        run: |
+          aws ecr get-login-password --region "${{ env.AWS_REGION }}" \
+            | docker login --username AWS --password-stdin \
+            "${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com"
+
+      - name: Build image (latest + sha)
+        run: |
+          IMAGE_URI="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR_REPOSITORY_NAME }}"
+          docker build -t "${IMAGE_URI}:latest" -t "${IMAGE_URI}:${{ github.sha }}" ./gatus
+
+      - name: Trivy scan (table)
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          image-ref: '${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR_REPOSITORY_NAME }}:${{ github.sha }}'
+          format: 'table'
+          
+
+      - name: Push image (latest + sha)
+        run: |
+          IMAGE_URI="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR_REPOSITORY_NAME }}"
+          docker push "${IMAGE_URI}:latest"
+          docker push "${IMAGE_URI}:${{ github.sha }}"
