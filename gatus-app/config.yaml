@@ -1,10 +1,10 @@
 endpoints:
- - name: Example
-   url: "https://example.org"
-   interval: 1m
+
+ - name: My Website
+   url: https://tm.gatus-rowaida.co.uk
+   interval: 30s
    conditions:
-    - "[STATUS] == 200"
-    - "[BODY].status == OK"
+     - "[STATUS] == 200"
     
  - name: DNS Resolution
    group: DNS
@@ -20,20 +20,12 @@ endpoints:
    url: "https://api.github.com"
    conditions:
     - "[STATUS] == 200"
-    - "[BODY].current_user_url == https://api.github.com/user"
-
 
  - name: TLS Certificate Check
    group: Security
-   url: "https://gatus-rowaida.co.uk"
-   interval: 6h
+   url: "https://tm.gatus-rowaida.co.uk"
+   interval: 1h
    conditions:
     - "[CERTIFICATE_EXPIRATION] > 720h"
 
 
- - name: Cloudflare ICMP
-   group: Network
-   url: "icmp://1.1.1.1"
-   interval: 1m
-   conditions:
-    - "[CONNECTED] == true"
