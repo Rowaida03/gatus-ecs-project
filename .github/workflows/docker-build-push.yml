@@ -36,6 +36,17 @@ jobs:
             | docker login --username AWS --password-stdin \
             "${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com"
 
+      - name: Debug - show gatus-app contents
+        run: |
+          pwd
+          ls -la
+          echo "---- gatus-app ----"
+          ls -la ./gatus-app
+          echo "---- Dockerfile check ----"
+          test -f ./gatus-app/Dockerfile && echo "Dockerfile exists ✅" || (echo "Dockerfile missing ❌" && exit 1)
+          echo "First 5 lines of Dockerfile:"
+          head -n 5 ./gatus-app/Dockerfile
+
       - name: Build image (latest + sha)
         run: |
           IMAGE_URI="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR_REPOSITORY_NAME }}"
