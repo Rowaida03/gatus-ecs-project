@@ -46,12 +46,18 @@ jobs:
            -t "${IMAGE_URI}:${{ github.sha }}" \
            ./gatus-app
 
+      - name: Install Trivy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget
+          wget -qO- https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.65.0_Linux-64bit.tar.gz | sudo tar -xz -C /usr/local/bin trivy
 
       - name: Trivy scan (table)
-        uses: aquasecurity/trivy-action@0.33.1
-        with:
-          image-ref: '${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR_REPOSITORY_NAME }}:${{ github.sha }}'
-          format: 'table'
+        run: |
+          IMAGE_URI="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR_REPOSITORY_NAME }}"
+          trivy image --format table "${IMAGE_URI}:${{ github.sha }}"
+
+
 
 
       - name: Push image (latest + sha)
