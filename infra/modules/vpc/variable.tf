@@ -35,7 +35,7 @@ variable "az2" {
 }
 
 variable "project_name" {
-  type = string
+  type        = string
   description = "The name of the project"
-  
+
 }

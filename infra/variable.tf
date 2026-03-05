@@ -35,17 +35,17 @@ variable "private_subnet_2_cidr" {
 
 variable "project_name" {
   description = "Name used to tag and identify project resources"
-  type = string
+  type        = string
 }
 
 variable "hosted_zone_id" {
   description = "Route53 hosted zone ID used for DNS records"
-  type = string
+  type        = string
 }
 
 variable "domain_name" {
   description = "Domain name used for this app"
-  type = string
+  type        = string
 }
 
 variable "image_tag" {
@@ -60,27 +60,27 @@ variable "aws_region" {
 
 variable "desired_count" {
   description = "number of ECS tasks"
-  type = number
+  type        = number
 }
 
 variable "container_cpu" {
   description = "CPU units for the container"
-  type    = number
+  type        = number
 }
 
 variable "container_memory" {
   description = "Memory allocated to the container in MB"
-  type    = number
+  type        = number
 }
 
 variable "container_port" {
   description = "Port container listening on"
-  type    = number
+  type        = number
 }
 
 variable "container_name" {
   description = "Name assigned to the container"
-  type    = string
+  type        = string
 }
 
 variable "cloudwatch_name" {
@@ -90,5 +90,5 @@ variable "cloudwatch_name" {
 
 variable "retention_period" {
   description = "Number of days Cloudwatch logs are retained"
-  type    = number
+  type        = number
 }

@@ -11,9 +11,9 @@ resource "aws_vpc" "gatus_vpc" {
 
 # Public Subnets (one per AZ)
 resource "aws_subnet" "public_subnet_1" {
-  vpc_id            = aws_vpc.gatus_vpc.id
-  cidr_block        = var.public_subnet_1_cidr
-  availability_zone = var.az1
+  vpc_id                  = aws_vpc.gatus_vpc.id
+  cidr_block              = var.public_subnet_1_cidr
+  availability_zone       = var.az1
   map_public_ip_on_launch = true
 
   tags = {
@@ -23,16 +23,16 @@ resource "aws_subnet" "public_subnet_1" {
 
 
 resource "aws_subnet" "public_subnet_2" {
-  vpc_id            = aws_vpc.gatus_vpc.id
-  cidr_block        = var.public_subnet_2_cidr
-  availability_zone = var.az2
+  vpc_id                  = aws_vpc.gatus_vpc.id
+  cidr_block              = var.public_subnet_2_cidr
+  availability_zone       = var.az2
   map_public_ip_on_launch = true
 
   tags = {
     Name = "${var.project_name}-public-2"
   }
 
-  
+
 }
 
 # Private Subnets (one per AZ)
@@ -67,7 +67,7 @@ resource "aws_eip" "nat_ip" {
 resource "aws_nat_gateway" "nat-gw" {
   allocation_id = aws_eip.nat_ip.id
   subnet_id     = aws_subnet.public_subnet_1.id
-  depends_on = [aws_internet_gateway.igw]
+  depends_on    = [aws_internet_gateway.igw]
 
   tags = {
     Name = "${var.project_name}-nat-gw"

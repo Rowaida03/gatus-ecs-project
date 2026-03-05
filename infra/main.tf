@@ -1,6 +1,6 @@
 module "vpc" {
   source = "./modules/vpc"
-  
+
   project_name          = var.project_name
   vpc_cidr              = var.vpc_cidr
   public_subnet_1_cidr  = var.public_subnet_1_cidr
@@ -27,35 +27,37 @@ module "ecr" {
 module "iam" {
   source       = "./modules/iam"
   project_name = var.project_name
+  github_owner = "Rowaida03"
+  github_repo  = "gatus-ecs-project"
 }
 
 module "acm" {
-  source  = "./modules/acm"
+  source = "./modules/acm"
 
   project_name   = var.project_name
-  domain_name    =  var.domain_name
+  domain_name    = var.domain_name
   hosted_zone_id = var.hosted_zone_id
 }
 
 module "alb" {
   source = "./modules/alb"
 
-  project_name      = var.project_name
+  project_name = var.project_name
   public_subnet_ids = [
     module.vpc.public_subnet1_id,
     module.vpc.public_subnet2_id
   ]
-  vpc_id            = module.vpc.vpc_id
-  certificate_arn   = module.acm.certificate_arn
-  alb_sg            = [module.security_groups.alb_sg_id]
-  
+  vpc_id          = module.vpc.vpc_id
+  certificate_arn = module.acm.certificate_arn
+  alb_sg          = [module.security_groups.alb_sg_id]
+
 }
 
 module "ecs" {
-  source = "./modules/ecs" 
+  source = "./modules/ecs"
 
   project_name = var.project_name
-  subnet_ids   = [
+  subnet_ids = [
     module.vpc.private_subnet1_id,
     module.vpc.private_subnet2_id
   ]
@@ -79,7 +81,7 @@ module "route53" {
   source = "./modules/route53"
 
   hosted_zone_id = var.hosted_zone_id
-   domain_name   = var.domain_name
-   alb_dns_name  = module.alb.alb_dns_name
-   alb_zone_id   = module.alb.alb_zone_id
+  domain_name    = var.domain_name
+  alb_dns_name   = module.alb.alb_dns_name
+  alb_zone_id    = module.alb.alb_zone_id
 }
