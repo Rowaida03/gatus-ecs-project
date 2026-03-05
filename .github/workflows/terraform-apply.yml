@@ -19,6 +19,7 @@ defaults:
 env:
   AWS_REGION: eu-west-2
   TERRAFORM_VERSION: latest
+  TF_VAR_hosted_zone_id: ${{ secrets.TF_VAR_hosted_zone_id }}
 
 jobs:
   terraform_apply:
