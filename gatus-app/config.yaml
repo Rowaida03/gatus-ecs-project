@@ -17,6 +17,7 @@ endpoints:
 
  - name: GitHub API
    group: External
+   interval: 30s
    url: "https://api.github.com"
    conditions:
     - "[STATUS] == 200"
@@ -24,7 +25,7 @@ endpoints:
  - name: TLS Certificate Check
    group: Security
    url: "https://tm.gatus-rowaida.co.uk"
-   interval: 1h
+   interval: 30s
    conditions:
     - "[CERTIFICATE_EXPIRATION] > 720h"
 
