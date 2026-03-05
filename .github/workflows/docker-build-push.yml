@@ -50,24 +50,10 @@ jobs:
       - name: Install Trivy (robust)
         run: |
           set -euo pipefail
-          TRIVY_VERSION="0.65.0"
-          FILE="trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz"
-          URL="https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/${FILE}"
-
-          echo "Downloading $URL"
-          curl -L --fail --retry 5 --retry-delay 2 -o "$FILE" "$URL"
-          echo "File size:"
-          ls -lh "$FILE"
-
-          cho "Extracting..."
-          tar -xzf "$FILE"
-
-          echo "Installing..."
-          sudo install -m 0755 trivy /usr/local/bin/trivy
- 
-          echo "Trivy version:"
-
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
+          | sudo sh -s -- -b /usr/local/bin
           trivy --version
+          
 
       - name: Trivy scan (table)
         run: |
