@@ -46,17 +46,33 @@ jobs:
            -t "${IMAGE_URI}:${{ github.sha }}" \
            ./gatus-app
 
-      - name: Install Trivy
+    
+      - name: Install Trivy (robust)
         run: |
-          sudo apt-get update
-          sudo apt-get install -y wget
-          wget -qO- https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.65.0_Linux-64bit.tar.gz | sudo tar -xz -C /usr/local/bin trivy
+          set -euo pipefail
+          TRIVY_VERSION="0.65.0"
+          FILE="trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz"
+          URL="https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/${FILE}"
+
+          echo "Downloading $URL"
+          curl -L --fail --retry 5 --retry-delay 2 -o "$FILE" "$URL"
+          echo "File size:"
+          ls -lh "$FILE"
+
+          cho "Extracting..."
+          tar -xzf "$FILE"
+
+          echo "Installing..."
+          sudo install -m 0755 trivy /usr/local/bin/trivy
+ 
+          echo "Trivy version:"
+
+          trivy --version
 
       - name: Trivy scan (table)
         run: |
-          IMAGE_URI="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR_REPOSITORY_NAME }}"
-          trivy image --format table "${IMAGE_URI}:${{ github.sha }}"
-
+         IMAGE_URI="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR_REPOSITORY_NAME }}"
+         trivy image --format table "${IMAGE_URI}:${{ github.sha }}"
 
 
 
