@@ -1,0 +1,52 @@
+name: Terraform apply
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "apply" to confirm'
+        required: true
+        type: string
+
+permissions:
+  id-token: write
+  contents: read
+
+defaults:
+  run:
+    working-directory: ./infra
+
+env:
+  AWS_REGION: eu-west-2
+  TERRAFORM_VERSION: "1.6.0"
+
+jobs:
+  terraform_apply:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'apply'
+    environment:
+      name: production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+      - name: Terraform init
+        run: terraform init
+
+      - name: Terraform plan
+        run: terraform plan -input=false
+
+      - name: Terraform apply
+        run: terraform apply -auto-approve -input=false
