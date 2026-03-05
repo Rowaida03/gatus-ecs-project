@@ -19,3 +19,4 @@ node_modules
 gatus
 config/config.yml
 config.yaml
+!config.yaml
