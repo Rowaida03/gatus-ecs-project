@@ -51,5 +51,8 @@ jobs:
       - name: Push image (latest + sha)
         run: |
           IMAGE_URI="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR_REPOSITORY_NAME }}"
-          docker push "${IMAGE_URI}:latest"
-          docker push "${IMAGE_URI}:${{ github.sha }}"
+          docker build \
+           -f ./gatus-app/Dockerfile \
+           -t "${IMAGE_URI}:latest" \
+           -t "${IMAGE_URI}:${{ github.sha }}" \
+           ./gatus-app
