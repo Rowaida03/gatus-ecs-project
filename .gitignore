@@ -1,11 +1,11 @@
 # Terraform
 infra/terraform.tfvars
 infra/*.tfvars
-!infra/*.auto.tfvars
+infra/*.auto.tfvars
 .terraform/
 .terraform.lock.hcl
 *.tfstate
 *.tfstate.*
 crash.log
 crash.*.log
-ci.auto.tfvars
+
