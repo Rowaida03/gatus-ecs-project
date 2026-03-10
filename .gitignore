@@ -8,3 +8,4 @@ infra/*.tfvars
 *.tfstate.*
 crash.log
 crash.*.log
+ci.auto.tfvars
