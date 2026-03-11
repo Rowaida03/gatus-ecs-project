@@ -55,7 +55,7 @@ This removes unnecessary build dependencies from the final image, resulting in:
 - faster image pulls
 - reduced attack surface
 
-####Non-root container user
+#### Non-root container user
 - The container runs as a non-root user, which is a common container security best practice.
 Running containers as non-root reduces the impact of potential container vulnerabilities.
 
