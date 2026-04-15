@@ -1,6 +1,6 @@
 # Gatus ECS Monitoring Infrastructure
 
-This project shows how to deploy Gatus, an open-source health monitoring tool, on AWS ECS Fargate using Terraform and GitHub Actions. It demonstrates how a containerized application can be built, pushed to Amazon ECR, and deployed to AWS with automated workflows.
+This project shows how to deploy Gatus, an open-source health monitoring tool, on AWS ECS Fargate using Terraform and GitHub Actions. It demonstrates how to containerise an application, be pushed to Amazon ECR, and deployed to AWS with automated workflows.
 
 ## What is Gatus? 
 Gatus is an open-source health monitoring and status page tool that helps developers and teams monitor the availability and performance of services and endpoints.
